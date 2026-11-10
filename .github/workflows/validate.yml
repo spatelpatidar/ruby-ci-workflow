@@ -1,0 +1,21 @@
+name: Validate workflows
+
+# Lints every workflow in this repo. Mark "actionlint" as a required check on main,
+# so Dependabot auto-merge only happens when the workflows are still valid.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  actionlint:
+    name: actionlint
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: docker://rhysd/actionlint:1.7.7
+        with:
+          args: -color

@@ -1,0 +1,20 @@
+name: Move v1 tag
+
+# Every push to main moves the floating "v1" tag, so all project repos
+# that use @v1 pick up the change on their next run.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Move v1 to this commit
+        run: |
+          git tag -f v1
+          git push -f origin v1
