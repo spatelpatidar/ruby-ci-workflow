@@ -104,7 +104,7 @@ jobs:
           GEM_FILE: ${{ steps.plan.outputs.gem_file }}
         run: |
           gem build "${GEMSPEC}"
-          test -f "${GEM_FILE}" || { echo "::error::Expected ${GEM_FILE} was not built"; ls -la *.gem; exit 1; }
+          test -f "${GEM_FILE}" || { echo "::error::Expected ${GEM_FILE} was not built"; ls -la ./*.gem; exit 1; }
 
       - name: Extract release notes from CHANGELOG.md
         if: steps.plan.outputs.release == 'true'
@@ -149,10 +149,10 @@ jobs:
           PRERELEASE: ${{ steps.plan.outputs.prerelease }}
         run: |
           if [ "${PRERELEASE}" = "true" ]; then
-            channel_flags="--prerelease --latest=false"
+            channel_flags=(--prerelease --latest=false)
             title="${NAME} ${VERSION} (pre-release)"
           else
-            channel_flags="--latest"
+            channel_flags=(--latest)
             title="${NAME} ${VERSION}"
           fi
 
@@ -160,7 +160,7 @@ jobs:
             --target "${RELEASE_SHA}" \
             --title "${title}" \
             --notes-file "${RUNNER_TEMP}/release_notes.md" \
-            ${channel_flags}
+            "${channel_flags[@]}"
 
   # Pushes ONLY to GitHub Packages (rubygems.pkg.github.com), never to rubygems.org.
   package:
