@@ -1,0 +1,31 @@
+name: Release
+
+# Runs after the "CI" workflow succeeds on a push to main, or manually.
+on:
+  workflow_run:
+    workflows: ["CI"]          # must match the `name:` in ci.yml exactly
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      recreate:
+        description: "Delete the existing tag/release for this version and create it again"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    # Tip: pin to a full commit SHA instead of @v1 if you want release changes reviewed per repo
+    uses: spatelpatidar/ruby-ci-workflow/.github/workflows/release.yml@v1
+    permissions:
+      contents: write
+      packages: write
+    with:
+      recreate: ${{ inputs.recreate || false }}

@@ -1,0 +1,8 @@
+# Optional once callers use the floating @v1 tag: there are no third-party
+# actions left in the project repo. Keep it only if you pin to a SHA.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
