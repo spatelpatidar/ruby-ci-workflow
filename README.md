@@ -19,7 +19,7 @@ Each project also needs:
 - `sonar-project.properties` (its own project key)
 - a `SONAR_TOKEN` repository secret
 - exactly one `*.gemspec` and a `CHANGELOG.md` in the repo root
-- required status check `ci / CI passed` in its ruleset
+- required status check `CI passed` in its ruleset (the caller `ci.yml` has a `CI passed` gate job)
 
 ## Maintaining this repo
 
