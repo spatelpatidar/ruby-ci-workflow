@@ -4,3 +4,8 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    # Wait a week after an action release before proposing it, so a hijacked or
+    # broken release is more likely to be caught before it reaches this repo.
+    # (Security updates ignore the cooldown.)
+    cooldown:
+      default-days: 7

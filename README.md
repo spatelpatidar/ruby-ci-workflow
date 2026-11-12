@@ -23,7 +23,10 @@ Each project also needs:
 
 ## Maintaining this repo
 
-- Dependabot bumps third-party actions here, `actionlint` validates the PR, auto-merge merges it.
-- Every push to `main` moves the `v1` tag (`update-tag.yml`).
-- Repo settings: enable **Allow auto-merge**, and require the `actionlint` check on `main`.
+- Dependabot opens PRs for third-party actions (7 day cooldown). **Merge them manually**:
+  this repo feeds every project, so a bad action update would reach all of them.
+- Before merging a Dependabot PR: read the action's release notes and skim the diff
+  between the old and new SHA. `actionlint` only checks syntax, not safety.
+- Every push to `main` moves the `v1` tag (`update-tag.yml`), so `main` is the only gate.
+  Protect it with a ruleset: require a pull request and the `actionlint` check, block force pushes.
 - Breaking changes: create `v2`, copy `update-tag.yml` to move `v2`, and migrate callers one by one.
