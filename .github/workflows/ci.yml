@@ -3,6 +3,9 @@ name: Ruby CI (reusable)
 # Called from a project repo:
 #   uses: spatelpatidar/ruby-ci-workflow/.github/workflows/ci.yml@v1
 # Each project keeps its own sonar-project.properties.
+#
+# NOTE: inside a reusable workflow, "./.github/actions/..." points at the CALLER's
+# repo, not this one. So the rspec action is referenced by its full path @v1.
 on:
   workflow_call:
     secrets:
@@ -19,11 +22,9 @@ jobs:
     runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+      - uses: spatelpatidar/ruby-ci-workflow/.github/actions/rspec@v1
         with:
           ruby-version: "3.2"
-          bundler-cache: true
-      - run: bundle exec rspec --format progress
 
   linux-ruby-3-3:
     name: Linux · Ruby 3.3
@@ -31,11 +32,9 @@ jobs:
     runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+      - uses: spatelpatidar/ruby-ci-workflow/.github/actions/rspec@v1
         with:
           ruby-version: "3.3"
-          bundler-cache: true
-      - run: bundle exec rspec --format progress
 
   linux-ruby-3-4:
     name: Linux · Ruby 3.4
@@ -43,11 +42,9 @@ jobs:
     runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+      - uses: spatelpatidar/ruby-ci-workflow/.github/actions/rspec@v1
         with:
           ruby-version: "3.4"
-          bundler-cache: true
-      - run: bundle exec rspec --format progress
 
   # ── Windows and macOS: start after Linux passes, run side by side ─────────
   windows-ruby-3-4:
@@ -56,23 +53,19 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+      - uses: spatelpatidar/ruby-ci-workflow/.github/actions/rspec@v1
         with:
           ruby-version: "3.4"
-          bundler-cache: true
-      - run: bundle exec rspec --format progress
 
   macos-ruby-3-4:
     name: macOS · Ruby 3.4
-    needs: linux-ruby-3-4
+    needs: windows-ruby-3-4
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+      - uses: spatelpatidar/ruby-ci-workflow/.github/actions/rspec@v1
         with:
           ruby-version: "3.4"
-          bundler-cache: true
-      - run: bundle exec rspec --format progress
 
   # ── Build, analysis, final gate ───────────────────────────────────────────
   build:
@@ -81,7 +74,8 @@ jobs:
     runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
           ruby-version: "3.4"
           bundler-cache: true
@@ -104,7 +98,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
           ruby-version: "3.4"
           bundler-cache: true
