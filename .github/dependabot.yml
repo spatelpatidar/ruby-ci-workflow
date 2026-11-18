@@ -1,9 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: github-actions
-    directories:
-      - /
-      - /.github/actions/rspec
+    directory: /
     schedule:
       interval: weekly
     # Wait a week after an action release before proposing it, so a hijacked or
